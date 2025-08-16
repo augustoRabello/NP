@@ -823,9 +823,9 @@ function gerarNotas() {
     const notaContainer = document.getElementById("notaContainer");
     notaContainer.innerHTML = ''; 
     notaContainer.style.display = "block";
-	notaContainer.style.width = "800px"; // Força a largura correta
+	notaContainer.style.width = "210mm"; // Força a largura correta
 	notaContainer.style.minHeight = "auto"; // Permite ajustes dinâmicos
-	notaContainer.style.padding = "10px"; // Pequeno espaçamento para evitar cortes
+	notaContainer.style.padding = "10mm"; // Pequeno espaçamento para evitar cortes
 
     for (let i = 1; i <= quantidade; i++) {
         const dataVencimentoAtual = adicionarMes(dataVencimentoInicial, (i - 1) * intervalo);
