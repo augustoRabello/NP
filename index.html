@@ -1,0 +1,951 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFF43D">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Nota Promissória</title>
+	<!--script src="html2pdf.bundle.min.js"-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+	
+</script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+		
+			/* Estilo geral */
+/*ok*/      body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #FFF43D;
+            padding: 1px; /*20 px*/
+    	    page-break-before: auto;
+			margin-top: 0;
+        }
+
+			/* Cabeçalho */
+/*ok-ok*/	.header {
+			display: flex; /* Ativa o Flexbox */
+			justify-content: center; /* Centraliza o conteúdo horizontalmente */
+			align-items: center; /* Alinha o conteúdo verticalmente (opcional) */
+			background-color: #fff; /* Cor de fundo do cabeçalho*/	
+			color: #333; /* Cor do texto */
+			padding: 5px; /* Espaçamento interno */
+			text-align: center; /* Garante que o texto seja centralizado */
+			border-bottom: 2px solid #FFF43D;
+		}		
+		
+/*ok-ok*/	.botao-container {
+			display: flex; /* Ativa Flexbox */
+			justify-content: center; /* Centraliza horizontalmente */
+			align-items: center; /* Centraliza verticalmente */
+			margin-top: -20px;  /*Espaçamento superior */
+			max-width: 800px;
+			/*width: 90%;*/
+			margin: 1px auto; /* Centraliza horizontalmente */
+		}
+		
+/*ok-ok*/	.btn-gerar {
+            background-color: #FFF43D;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+			border: 2px solid #eeff00;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+/*ok-ok*/  .btn-gerar:hover {
+            background-color: #FFDE00;
+			/* transform: scale(1.05); Pequeno efeito de zoom */
+        }
+		
+/*ok-ok*/	.limparCampos {
+            background-color: #007bff;
+            color: #000000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+			border: 2px solid #eeff00;			
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+		
+		
+		
+			/* Container principal */
+/*ok-ok*/   .Layout-container {
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background: #fff;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+			color: #222;
+			font-weight: bold;
+			font-size: 1.3em;
+        }
+		
+		.Layout-container h2{
+			color: #007bff;
+		}
+	
+		
+/*ok*/      .header h1 {
+            text-align: center;
+            font-size: 2em;
+            color: #007bff;
+			/*text-shadow: 0 0 10px #FFCD00; /* Efeito neon */			
+			/*color: #007bff;*/
+            margin-bottom: 5px; /*30 px*/
+        }
+		
+		
+/*ok-ok*/	table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+		
+/*ok-ok*/	th, td {
+		    /*padding: 10px; Se manter essa configuração, estraga impressão*/ 
+            text-align: left;
+        }
+		
+/*ok-ok*/	td {
+			padding-left: 5px;
+            /*border: 1px solid #ddd;*/
+            vertical-align: middle;
+        }
+
+/*ok-ok*/   input, select, button {
+            width: 90%;
+            padding: 5px; /*Se manter essa configuração, estraga impressão*/
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+		
+		input[type="date"] {
+            width: 90%;		
+		}
+		
+		
+/*ok-ok*/   input:focus, select:focus, button:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+		
+		
+        /* Rodapé do formulário */
+/*ok-ok*/   .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9rem;
+            color: #777;
+        }	
+
+	
+		/*input[type="text"], input[type="date"], input[type="number"], select {
+            width: 60%;
+            padding: 5px; 10px
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px; manter 5px
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }*/
+		
+/*ok*/ 		.InputExtenso{
+			width: 90%;
+			background-color: #f0f0f0;
+		}		
+		   
+
+
+
+		.oculto {
+			display: none;
+		}
+
+
+/*ok*/      button {
+            background-color: #007bff;
+            color: #000000;
+            border: none;
+            padding: 5px 10px; /*10px 20px*/
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+/*ok*/      button:hover {
+            background-color: #0056b3;
+        }
+
+
+        
+/*ok*/  .nota-promissoria { 
+            margin: 0 auto; /* Centraliza horizontalmente */
+			max-width: 800px; /* Define uma largura máxima */
+			text-align: center; /* Centraliza o texto dentro da nota */
+        }
+		
+/*ok*/		
+		.nota-promissoria h1 {
+			color: #000;  
+            text-align: center;
+            text-decoration: underline;
+        }
+		
+/*ok*/     
+		.nota-promissoria h3 {
+			color: #000;   
+            text-align: center;
+            font-size: 18px;
+			margin-top: 0;
+            /*margin: 15px 0;*/
+        }
+		
+/*ok*/		.nota-promissoria p {  
+			font-size: 12px;
+            margin: 4px 0;
+			color: #000000;
+        }
+
+
+/*ok*/	.nota-linha1 { 
+    	display: flex;
+    	justify-content: space-between;
+		font-size: 14px;
+    	margin: 0; /* Ajusta o espaçamento do parágrafo, se necessário */
+	}
+
+		.nota-linha1 span {
+	    /* Estilos opcionais para espaçamento ou formatação, se precisar */
+	}
+
+
+
+ /* Estilos para reduzir o espaço entre parágrafos da div .assinatura */
+/*ok*/		.assinatura p {  
+            margin: 4px 0;
+            line-height: 1.2;
+        }
+
+/*ok*/      
+		.assinatura {  
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Estilo para as linhas de texto */
+        p {  /*ok*/
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        .dados-emissor {
+            margin-top: 10px;
+        }
+		
+	#notaContainer {
+		width: 794px; /* Largura exata do A4 (em pixels) */
+		min-height: 1123px; /* Altura exata do A4 */
+		padding: 0; /* Garante que não há margens internas */
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		}
+
+        .note-container { /*ok*/
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        /*.note {
+            border: 1px solid #000;
+            padding: 10px;
+            width: 90%;
+            margin: 10px;
+            font-size: 12px;
+            height: 400px;
+            box-sizing: border-box;
+            page-break-inside: avoid;
+        }*/
+		
+		.note {
+			position: relative; /*apagar */
+			
+			border: 1px solid #000;
+			margin: 20px auto;  /*- Centraliza horizontalmente */
+			width: 90%; /* Define uma largura padrão */
+			max-width: 800px; /* Define uma largura máxima */
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Opcional: para destaque */
+			border-radius: 8px; /* Opcional: bordas arredondadas */
+			padding: 20px; /* Espaçamento interno */
+			text-align: center; /* Centraliza o texto dentro da nota */
+}
+		.DadosEmitente { 
+			display: flex; /* Ativa Flexbox */
+			/*justify-content: center; Centraliza horizontalmente */
+		    justify-content: space-between; /* Isso empurra os elementos para os lados */
+			align-items: center; /* Centraliza verticalmente */
+			margin: 1px auto; /* Centraliza horizontalmente */
+		    border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            color: #FFF43D;
+			/*text-shadow: 0 0 10px #FFCD00; /* Efeito neon */
+			/*font-size: 1.5em;*/
+		}
+
+		
+		.DadosBeneficiario { 
+		    border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            color: #FFF43D;
+			/*text-shadow: 0 0 10px #FFCD00; /* Efeito neon */
+		}
+		.btnEmitente2{
+			width: 30%;
+		    background-color: #FFF43D;
+            color: #000000;
+            border: none;
+            padding: 10px 10px;
+            border-radius: 5px;
+			border: 2px solid #eeff00;			
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;		
+		}
+		
+		
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Gerador de Notas Promissórias</h1>
+    </div>
+
+    <div class="Layout-container">
+		<div class="DadosEmitente">
+		<h2>Dados do Emitente</h2> 
+		<button id="btnToggleEmitente2" class="btnEmitente2" type="button" onclick="toggleEmitente2()">Adicionar Segundo Emitente</button>
+		</div>
+		<table> 
+			<tr>
+				<td>Nº Parcelas:</td>
+				<td><input type="number" id="quantidade" min="1" required placeholder="Digite o número"></td>
+			</tr>
+			<tr>
+				<td>Data de Emissão:</td>
+				<td><input type="date" id="dataEmissao" required></td>
+			</tr>
+			<tr>	
+				<td>Data de Vencimento (1ª Nota):</td>
+				<td><input type="date" id="dataVencimento" required></td>
+			</tr>
+			<tr>
+				<td colspan="2">Nome do Emitente 1:</td>
+			</tr>
+			<tr>	
+				<td colspan="2"><input type="text" id="nomeEmitente" required placeholder="Nome completo do PRIMEIRO emitente"></td>
+			</tr>
+			<tr>	
+				<td colspan="2">CPF/CNPJ - Emitente 1:</td>
+			</tr>
+			<tr>	
+				<td colspan="2"><input type="text" id="cpfCnpjEmitente" name="cpfCnpjEmitente" oninput="this.value = formatarDocumento(this.value)" placeholder="Digite o CPF ou CNPJ" maxlength="18"></td>			
+			</tr>			
+			<tr>
+				<td colspan="2">Endereço do Emitente 1: </td>
+			</tr>			
+			<tr>	
+				<td colspan="2"><input type="text" id="enderecoEmitente" required placeholder="Endereço completo, Cidade/Estado"></td>			
+			</tr>
+	<!-- Segundo emitente -->	
+			<tr class="oculto" id="linhaEmitente2a">
+				<td colspan="2">Nome do Emitente 2:</td>
+			</tr>			
+			<tr class="oculto" id="linhaEmitente2b">		
+				<td colspan="2"><input type="text" id="nomeEmitente2" required placeholder="Nome completo do SEGUNDO emitente"></td>
+			</tr>
+			<tr class="oculto" id="linhaEmitente2c">	
+				<td colspan="2">CPF/CNPJ - Emitente 2:</td>
+			</tr>			
+			<tr class="oculto" id="linhaEmitente2d">		
+				<td  colspan="2"><input type="text" id="cpfCnpjEmitente2" name="cpfCnpjEmitente" oninput="this.value = formatarDocumento(this.value)" placeholder="Digite o CPF ou CNPJ" maxlength="18"></td>			
+			</tr>
+			<tr class="oculto" id="linhaEmitente2e">
+				<td colspan="2">Endereço do Emitente 2: </td>
+			</tr>			
+			<tr class="oculto" id="linhaEmitente2f">		
+				<td colspan="2"><input type="text" id="enderecoEmitente2" required placeholder="Endereço completo, Cidade/Estado"></td>			
+			</tr>
+
+			
+			<tr>
+				<td>Valor (R$):</td>
+				<td><input type="text" id="valor" oninput="formatarValor(this); atualizarValorExtenso();" maxlength="15" required placeholder="Exemplo: 1000,00"></td>
+			</tr>
+			<tr>	
+				<td>Intervalo de Pagamento:</td>
+					<td>
+			        <select id="intervalo" required>
+						<option value="1">Mensal</option>
+						<option value="3">Trimestral</option>
+						<option value="6">Semestral</option>
+						<option value="12">Anual</option>
+					</select>
+					</td>
+			</tr>
+			<tr>		
+				<td>Opção de correção:</td>
+					<td>
+					<select id="opcaoJuros" required>
+						<option value="incc">INCC/M</option>
+						<option value="igpm">IGPM</option>
+						<option value="poupanca">POUPANÇA</option>
+						<option value="fixo">FIXO</option>
+					</select>					
+					</td>
+			</tr>
+			<tr>
+				<td colspan="2">Valor por Extenso:</td>
+			</tr>
+			<tr>	
+				<td colspan="2">
+				<input type="text" id="valorExtenso" class="InputExtenso" placeholder="Valor por extenso inserido automaticamente"><br>
+				<button type="button" onclick="atualizarValorExtenso()">Atualizar valor por extenso</button>
+				</td>				
+			</tr>
+		</table>
+		<div class="DadosBeneficiario">
+			<h2>Dados do Beneficiário</h2>
+		</div>
+		<table>
+			<tr>
+				<td colspan="2">Nome do Beneficiário:</td>
+			</tr>
+			<tr>	
+				<td colspan="2"><input type="text" id="beneficiario" required placeholder="Nome completo do beneficiário"></td>
+			</tr>
+			<tr>	
+				<td colspan="2">CPF/CNPJ - Beneficiário:</td>
+			</tr>
+			<tr>	
+				<td colspan="2"><input type="text" id="cpfCnpjBeneficiario" name="cpfCnpjBeneficiario" oninput="this.value = formatarDocumento(this.value)" placeholder="Digite o CPF ou CNPJ" maxlength="18"></td>
+			</tr>
+			<tr>
+				<td colspan="2">Local de Pagamento (Cidade/Estado):</td>
+			</tr>
+			<tr>	
+				<td colspan="2"><input type="text" id="localPagamento" required placeholder="Digite a Cidade/Estado"></td>
+			</tr>
+		</table>	
+	   
+	</div>
+			<div  class="botao-container">
+				<button id="limparCampos" class="limparCampos" type="button" onclick="limparCampos()">Limpar Campos</button>
+				<!--button id="btnToggleEmitente2" class="limparCampos" type="button" onclick="toggleEmitente2()">Adicionar Segundo Emitente</button-->
+				<button id="gerarPDF" class="btn-gerar" onclick="gerarNotas()">Gerar Notas</button>
+			</div>
+		    <div class="footer">
+				&copy; 2024 Gerador de Notas Promissórias. Todos os direitos reservados. Augusto Rabello (51) 98443-8115
+			</div>
+		
+		
+		
+</form>
+    <div id="notaContainer" style="display: none;"></div>
+
+    <!--script src="html2pdf.bundle.min.js"></script-->
+    <script>
+	
+	
+        // Função para formatar o CPF
+        function formatarCPF(cpf) {
+            cpf = cpf.replace(/\D/g, ""); // Remove tudo o que não é dígito
+            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2"); // Coloca ponto entre o terceiro e o quarto dígitos
+            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2"); // Coloca ponto entre o sexto e o sétimo dígitos
+            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Coloca o hífen entre o nove e o dez
+            return cpf;
+        }
+
+        // Função para formatar o CNPJ
+        function formatarCNPJ(cnpj) {
+            cnpj = cnpj.replace(/\D/g, ""); // Remove tudo o que não é dígito
+            cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2"); // Coloca ponto entre o segundo e o terceiro dígitos
+            cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3"); // Coloca ponto entre o quinto e o sexto dígitos
+            cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1/$2"); // Coloca a barra entre o oitavo e o nono dígitos
+            cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2"); // Coloca o hífen depois do quarto bloco de números
+            return cnpj;
+        }
+
+        // Função para formatar automaticamente CPF ou CNPJ
+        function formatarDocumento(v) {
+            v = v.replace(/\D/g, ""); // Remove tudo o que não é dígito
+
+            // Se o número tiver 11 dígitos, formata como CPF
+            if (v.length <= 11) {
+                v = formatarCPF(v);
+            }
+            // Se o número tiver 14 dígitos, formata como CNPJ
+            else if (v.length > 11 && v.length <= 14) {
+                v = formatarCNPJ(v);
+            }
+            return v;
+        }
+
+
+       // Função para formatar o valor monetário corretamente
+        function formatarValor(input) {
+            let valor = input.value.replace(/\D/g, ''); // Remove tudo que não for número
+
+            // Limita o valor a 15 dígitos
+            if (valor.length > 15) {
+                valor = valor.slice(0, 15);
+            }
+
+            // Separa os centavos
+            let inteiro = valor.slice(0, -2); // Parte inteira
+            let centavos = valor.slice(-2); // Centavos
+
+            // Formata a parte inteira com pontos de milhar
+            inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            // Adiciona os centavos com vírgula
+            input.value = inteiro + ',' + centavos;
+        }
+
+        // Função para converter número em extenso para valores monetários (reais e centavos)
+function numeroParaExtenso(valor) {
+    const unidades = ["", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove"];
+    const dezenas = ["", "", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"];
+    const especiais = ["dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"];
+    const centenas = ["", "cento", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"];
+    const grandesUnidades = ["", "mil", "milhão", "bilhão"];
+    const pluralGrandesUnidades = ["", "mil", "milhões", "bilhões"];
+
+    // Função para converter um grupo de até três dígitos em extenso, com inserção correta de "e"
+    function extensoMilhar(n) {
+        let texto = "";
+        let precisaE = false;
+
+        // Centenas
+        if (n.length === 3) {
+            if (n[0] !== "0") {
+                texto += (n === "100" ? "cem" : centenas[n[0]]);
+                precisaE = true;
+            }
+            n = n.slice(1);  // Remove a centena do número para processar as dezenas e unidades
+        }
+
+        // Dezenas e unidades
+        if (n.length === 2) {
+            if (n[0] === "1") {  // Trata os números de 10 a 19
+                texto += (precisaE ? " e " : "") + especiais[n[1]];
+                return texto;
+            } else if (n[0] !== "0") {  // Trata as dezenas (20, 30, etc.)
+                texto += (precisaE ? " e " : "") + dezenas[n[0]];
+                precisaE = true;
+            }
+            n = n.slice(1);  // Remove a dezena do número para processar a unidade
+        }
+
+        if (n.length === 1 && n[0] !== "0") {  // Trata as unidades (1, 2, etc.)
+            texto += (precisaE ? " e " : "") + unidades[n[0]];
+        }
+
+        return texto.trim();
+    }
+
+    // Processa o valor separando em reais e centavos
+    let [reais, centavos] = valor.toFixed(2).split(".");
+    reais = reais.padStart(15, "0");  // Garantir que temos 15 dígitos para lidar com bilhões
+    let textoFinal = "";
+    let primeiroGrupo = true;
+
+    // Processa cada grupo de 3 dígitos (bilhões, milhões, milhar, unidades)
+    for (let i = 0; i < reais.length; i += 3) {
+        let grupo = reais.slice(i, i + 3);
+        if (grupo === "000") continue;  // Pula grupos vazios
+
+        let posicao = (reais.length - i) / 3 - 1;  // Calcula a posição do grupo (mil, milhão, etc.)
+        let unidadeGrande = grupo === "001" ? grandesUnidades[posicao] : pluralGrandesUnidades[posicao];
+        let extensoGrupo = extensoMilhar(grupo);
+
+        if (extensoGrupo) {
+            if (!primeiroGrupo) textoFinal += " e ";  // Insere "e" entre grupos principais quando necessário
+            textoFinal += extensoGrupo + " " + unidadeGrande;
+            primeiroGrupo = false;
+        }
+    }
+
+    textoFinal = textoFinal.trim();
+    textoFinal += textoFinal ? (textoFinal === "um" ? " real" : " reais") : "";
+
+    // Processa os centavos, se houver
+    if (centavos && centavos !== "00") {
+        let extensoCentavos = extensoMilhar(centavos);
+        textoFinal += ` e ${extensoCentavos} ${centavos === "01" ? "centavo" : "centavos"}` /*innerHTML_END*/ ;
+    }
+
+    return textoFinal.trim();
+}
+
+        // Função para atualizar o campo "Valor por Extenso" automaticamente
+function atualizarValorExtenso() {
+    let valorCampo = document.getElementById("valor").value;
+    let valorExtensoCampo = document.getElementById("valorExtenso");
+
+    if (valorCampo) {
+        let valorNumerico = parseFloat(valorCampo.replace(/\./g, '').replace(',', '.')); // Corrige a conversão do valor com vírgula
+        if (!isNaN(valorNumerico)) {
+            valorExtensoCampo.value = numeroParaExtenso(valorNumerico); // Usa a função para converter o valor para extenso
+        }
+    } else if (!valorExtensoCampo.value) { 
+        // Atualiza apenas se o campo estiver vazio (evita sobrescrever uma edição manual)
+        valorExtensoCampo.value = '';
+    }
+}
+
+        function criarDataLocal(dataStr) {
+            const [ano, mes, dia] = dataStr.split("-").map(Number);
+            return new Date(ano, mes - 1, dia); // Meses em JavaScript são 0-11
+        }
+
+        function adicionarMes(data, meses) {
+            const novaData = new Date(data);
+            novaData.setMonth(novaData.getMonth() + meses);
+
+            // Ajustar a data para o último dia do mês, caso a data inicial seja no final de um mês
+            if (novaData.getDate() < data.getDate()) {
+                novaData.setDate(0); // Ajusta para o último dia do mês anterior, se ultrapassar
+            }
+            return novaData;
+        }
+
+        function formatarData(data) {
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const ano = data.getFullYear();
+            return `${dia}/${mes}/${ano}` /*innerHTML_END*/ ;
+        }
+
+//data
+// Função para obter o nome do mês por extenso
+function obterMesExtenso(mes) {
+    const meses = [
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+    return meses[mes];
+}
+
+// Função para converter número para extenso
+function numeroParaExtensoSimples(numero) {
+    const unidades = ["", "Um", "Dois", "Três", "Quatro", "Cinco", "Seis", "Sete", "Oito", "Nove"];
+    const dezenas = ["", "", "Vinte", "Trinta", "Quarenta", "Cinquenta", "Sessenta", "Setenta", "Oitenta", "Noventa"];
+    const especiais = ["Dez", "Onze", "Doze", "Treze", "Quatorze", "Quinze", "Dezesseis", "Dezessete", "Dezoito", "Dezenove"];
+    const centenas = ["", "Cem", "Duzentos", "Trezentos", "Quatrocentos", "Quinhentos", "Seiscentos", "Setecentos", "Oitocentos", "Novecentos"];
+
+    if (numero < 10) return unidades[numero];
+    if (numero < 20) return especiais[numero - 10];
+    if (numero < 100) {
+        let dezena = Math.floor(numero / 10);
+        let unidade = numero % 10;
+        return dezenas[dezena] + (unidade > 0 ? ` e ${unidades[unidade]}` : "");
+    }
+    if (numero < 1000) {
+        let centena = Math.floor(numero / 100);
+        let resto = numero % 100;
+        return centenas[centena] + (resto > 0 ? ` e ${numeroParaExtensoSimples(resto)}` : "");
+    }
+    return ""; // Para simplificação, lidamos apenas com números até 999
+}
+
+function anoParaExtenso(ano) {
+    const milhares = Math.floor(ano / 1000);
+    const centenas = ano % 1000;
+    return `${numeroParaExtensoSimples(milhares)} Mil` + (centenas > 0 ? ` e ${numeroParaExtensoSimples(centenas)}` : "");
+}
+
+// Função para formatar a data no formato "15 de Novembro de 2024"
+function formatarDataExtenso(data) {
+    const dia = data.getDate();
+    const mes = obterMesExtenso(data.getMonth());
+    const ano = data.getFullYear();
+    return `${dia} de ${mes} de ${ano}` /*innerHTML_END*/ ;
+}
+
+// Função para formatar a data no formato "Quinze de Novembro de Dois Mil e Vinte e Quatro"
+function formatarDataPorExtensoCompleto(data) {
+    const diaExtenso = numeroParaExtensoSimples(data.getDate());
+    const mesExtenso = obterMesExtenso(data.getMonth());
+    const anoExtenso = anoParaExtenso(data.getFullYear());
+    return `${diaExtenso} de ${mesExtenso} de ${anoExtenso}` /*innerHTML_END*/ ;
+}
+
+//data
+//Função Opção Juros
+function opcaoJuros() {
+    const opcaoJuros = document.getElementById("opcaoJuros").value;
+    let textoJuros = "";
+
+    switch (opcaoJuros) {
+        case "incc":
+            textoJuros = "OS VALORES CONTIDOS NESSA NOTA PROMISSÓRIA SERÃO ATUALIZADOS PELO INCC/M CALCULADOS A PARTIR DA DATA DE EMISSÃO.";
+            break;
+        case "igpm":
+            textoJuros = "OS VALORES CONTIDOS NESSA NOTA PROMISSÓRIA SERÃO ATUALIZADOS PELO IGPM CALCULADOS A PARTIR DA DATA DE EMISSÃO.";
+            break;
+        case "poupanca":
+            textoJuros = "OOS VALORES CONTIDOS NESSA NOTA PROMISSÓRIA SERÃO ATUALIZADOS PELA TAXA DE JUROS DA POUPANÇA A PARTIR DA DATA DE EMISSÃO.";
+            break;
+        case "fixo":
+            textoJuros = "ESTA NOTA PROMISSÓRIA NÃO ESTÁ SUJEITA A CORREÇÃO ATÉ O VENCIMENTO.";
+            break;
+        default:
+            textoJuros = "Escolha a opção de correção de juros.";
+            break;
+    }
+	    return textoJuros;
+}
+
+// Função para limpar campos para Emitir nova Promissória
+function limparCampos() {
+    // Seleciona todos os campos de entrada de texto, número, data e selects
+    const inputs = document.querySelectorAll('input, select');
+
+    inputs.forEach(input => {
+        // Verifica se é um dos campos que NÃO devem ser limpos
+        if (input.id === 'intervalo' || input.id === 'opcaoJuros') {
+            return; // Ignora esses campos
+        }
+
+        if (input.type === 'checkbox' || input.type === 'radio') {
+            // Desmarca caixas de seleção e botões de rádio
+            input.checked = false;
+        } else {
+            // Limpa campos de texto, número e outros selects
+            input.value = '';
+        }
+    });
+
+    // Opcional: Atualiza o valor por extenso para um campo vazio
+    const valorExtensoCampo = document.getElementById('valorExtenso');
+    if (valorExtensoCampo) {
+        valorExtensoCampo.value = '';
+    }
+
+    alert('Os campos foram limpos, Pode iniciar nova promissoria!');
+}
+
+
+
+function toggleEmitente2() {
+    const linha1 = document.getElementById("linhaEmitente2a");
+    const linha2 = document.getElementById("linhaEmitente2b");
+    const linha3 = document.getElementById("linhaEmitente2c");
+    const linha4 = document.getElementById("linhaEmitente2d");	
+    const linha5 = document.getElementById("linhaEmitente2e");	
+    const linha6 = document.getElementById("linhaEmitente2f");
+    const btn = document.getElementById("btnToggleEmitente2");
+
+    const ocultos = linha1.classList.contains("oculto");
+
+    linha1.classList.toggle("oculto");
+    linha2.classList.toggle("oculto");
+    linha3.classList.toggle("oculto");
+    linha4.classList.toggle("oculto");
+    linha5.classList.toggle("oculto");
+    linha6.classList.toggle("oculto");	
+
+    btn.textContent = ocultos ? "Remover Segundo Emitente" : "Adicionar Segundo Emitente";
+}
+
+
+
+
+
+function gerarNotas() {
+
+    const exibirEmitente2 = !document.getElementById("linhaEmitente2a").classList.contains("oculto");
+
+    const nomeEmitente = document.getElementById("nomeEmitente").value;
+    const cpfCnpjEmitente = document.getElementById("cpfCnpjEmitente").value;
+    const enderecoEmitente = document.getElementById("enderecoEmitente").value;
+    const nomeEmitente2 = document.getElementById("nomeEmitente2").value;
+    const cpfCnpjEmitente2 = document.getElementById("cpfCnpjEmitente2").value;
+    const enderecoEmitente2 = document.getElementById("enderecoEmitente2").value;
+    const valor = document.getElementById("valor").value;
+    const valorExtenso = document.getElementById("valorExtenso").value;
+    const dataEmissao = criarDataLocal(document.getElementById("dataEmissao").value);
+    const dataEmissaoFormatada = formatarData(dataEmissao);
+    const dataEmissaoExtenso = formatarDataExtenso(dataEmissao);
+    const dataEmissaoCompleto = formatarDataPorExtensoCompleto(dataEmissao);
+    const dataVencimentoInicial = criarDataLocal(document.getElementById("dataVencimento").value);
+    const beneficiario = document.getElementById("beneficiario").value;
+    const cpfCnpjBeneficiario = document.getElementById("cpfCnpjBeneficiario").value;
+    const localPagamento = document.getElementById("localPagamento").value;
+    const quantidade = parseInt(document.getElementById("quantidade").value);
+    const intervalo = parseInt(document.getElementById("intervalo").value); 
+    const textoJuros = opcaoJuros();
+	//const opcaoJuros = document.getElementById("opcaoJuros").value;
+    //const textoJuros = opcaoJuros === "comJuros" ? "Os valores contidos nessa nota promissória serão atualizados pelo INCC/M calculado a partir da data de emissão." : "Esta nota promissória não está sujeita a juros.";
+
+				
+
+
+
+    const notaContainer = document.getElementById("notaContainer");
+    notaContainer.innerHTML = ''; 
+    notaContainer.style.display = "block";
+	notaContainer.style.width = "800px"; // Força a largura correta
+	notaContainer.style.minHeight = "auto"; // Permite ajustes dinâmicos
+	notaContainer.style.padding = "10px"; // Pequeno espaçamento para evitar cortes
+
+    for (let i = 1; i <= quantidade; i++) {
+        const dataVencimentoAtual = adicionarMes(dataVencimentoInicial, (i - 1) * intervalo);
+        const dataVencimentoFormatada = formatarData(dataVencimentoAtual);
+        const dataVencimentoCompleto = formatarDataPorExtensoCompleto(dataVencimentoAtual);
+
+        const notaDiv = document.createElement("div");
+        notaDiv.classList.add("note");
+
+       
+	 
+        const assinatura2HTML = exibirEmitente2 ? `
+            <div class="assinatura1">
+				<BR>
+                <p>__________________________________________________</p>
+                <p>Nome do(a) Primeiro(a) Emitente: <strong>${nomeEmitente}</strong></p>
+                <p>CPF/CNPJ do(a) Primeiro(a) Emitente: <strong>${cpfCnpjEmitente}</strong></p>
+                <p>Endereço do(a) Primeiro(a) Emitente: <strong>${enderecoEmitente}</strong></p>
+            </div>
+			<div class="assinatura2">
+				<BR>
+                <p>__________________________________________________</p>
+                <p>Nome do(a) Segundo(a) Emitente: <strong>${nomeEmitente2}</strong></p>
+                <p>CPF/CNPJ do(a) Segundo(a) Emitente: <strong>${cpfCnpjEmitente2}</strong></p>
+                <p>Endereço do(a) Segundo(a) Emitente: <strong>${enderecoEmitente2}</strong></p>
+            </div>` : '';
+        
+        notaDiv.innerHTML = /*innerHTML_START*/ `
+        <div class="nota-promissoria">
+            <h1>NOTA PROMISSÓRIA</h1>
+
+            <p class="nota-linha1">
+                <span>Nota Nº: <strong>${i} de ${quantidade}</strong></span>
+                <span>Vencimento: <strong>${dataVencimentoFormatada}</strong></span>
+            </p>
+
+            <h3>R$ <strong>${valor}</strong></h3>
+
+            <p>No dia <strong>${dataVencimentoCompleto}</strong>, pagarei por esta única via de nota promissória a <strong>${beneficiario}</strong>, inscrito(a) no CPF/CNPJ nº <strong>${cpfCnpjBeneficiario}</strong> ou à 
+            sua ordem a quantia de <strong>${valorExtenso}</strong> em moeda corrente deste país. Págavel em <strong>${localPagamento}</strong>. 
+			<BR><strong>${textoJuros}</strong></p>
+	    <br>
+            <p>${localPagamento}, ${dataEmissaoExtenso}.</p>
+
+			${exibirEmitente2 ? '' : `
+            <div class="assinatura">
+                <p>__________________________________________________</p>
+                <p>Nome do(a) Emitente: <strong>${nomeEmitente}</strong></p>
+                <p>CPF/CNPJ do(a) Emitente: <strong>${cpfCnpjEmitente}</strong></p>
+                <p>Endereço do(a) Emitente: <strong>${enderecoEmitente}</strong></p>
+            </div>
+			`}
+            ${assinatura2HTML}
+                <p>Data de Emissão: ${dataEmissaoFormatada} - ${dataEmissaoCompleto}</p>
+            </div>
+        </div>` /*innerHTML_END*/ ;
+        
+        notaContainer.appendChild(notaDiv);
+		
+		if (i % 2 === 0) {
+                    const pageBreak = document.createElement("div");
+                    pageBreak.style.pageBreakAfter = "always";
+                    notaContainer.appendChild(pageBreak);
+    }
+}
+		// Configuração para gerar o PDF
+		const options = {
+			margin: 0, //[0, 0, 0, 0], // Certifique-se de que todas as margens são 0
+			filename: 'notas_promissorias.pdf',
+			image: { type: 'jpeg', quality: 0.98 },
+			html2canvas: { 
+				scale: 2, 
+				useCORS: true, 
+				scrollY: 0 // Impede que o zoom afete a renderização
+			}, //html2canvas: { scale: 2 },
+		jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+		};
+
+		// Aguarda um tempo antes de capturar o PDF
+		setTimeout(() => {
+			document.body.style.overflow = "hidden"; // Impede que o scroll afete a captura
+
+			html2pdf().set(options).from(notaContainer).save().then(() => {
+				document.body.style.overflow = "auto"; // Restaura o scroll depois da captura
+				notaContainer.innerHTML = ""; // Apaga as notas da tela após gerar o PDF
+				notaContainer.style.display = "none"; // Oculta o container
+			});
+
+		}, 300);
+			
+        }
+				
+    
+function toggleEmitente2() {
+    const linha1 = document.getElementById("linhaEmitente2a");
+    const linha2 = document.getElementById("linhaEmitente2b");
+    const linha3 = document.getElementById("linhaEmitente2c");
+    const linha4 = document.getElementById("linhaEmitente2d");	
+    const linha5 = document.getElementById("linhaEmitente2e");	
+    const linha6 = document.getElementById("linhaEmitente2f");
+    const btn = document.getElementById("btnToggleEmitente2");
+
+    const ocultos = linha1.classList.contains("oculto");
+
+    linha1.classList.toggle("oculto");
+    linha2.classList.toggle("oculto");
+    linha3.classList.toggle("oculto");	
+	linha4.classList.toggle("oculto");
+    linha5.classList.toggle("oculto");
+    linha6.classList.toggle("oculto");	
+
+    btn.textContent = ocultos ? "Remover Segundo Emitente" : "Adicionar Segundo Emitente";
+}
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker registrado!"))
+    .catch(err => console.error("Erro no SW:", err));
+}
+</script>
+</body>
+</html>
