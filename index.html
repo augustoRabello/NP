@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <link rel="manifest" href="manifest.json">
@@ -57,7 +57,7 @@
             border-radius: 5px;
 			border: 2px solid #eeff00;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 16px; /*1rem*/
             font-weight: bold;
             transition: background-color 0.3s;
         }
@@ -75,7 +75,7 @@
             border-radius: 5px;
 			border: 2px solid #eeff00;			
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 16px; /*1rem*/
             font-weight: bold;
             transition: background-color 0.3s;
         }
@@ -92,7 +92,7 @@
             border-radius: 8px;
 			color: #222;
 			font-weight: bold;
-			font-size: 1.3em;
+			font-size: 21px; /*1.3em*/
         }
 		
 		.Layout-container h2{
@@ -102,7 +102,7 @@
 		
 /*ok*/      .header h1 {
             text-align: center;
-            font-size: 2em;
+            font-size: 32px; /*2em*/
             color: #007bff;
 			/*text-shadow: 0 0 10px #FFCD00; /* Efeito neon */			
 			/*color: #007bff;*/
@@ -133,7 +133,7 @@
             margin-bottom: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 1rem;
+            font-size: 16px; /*1rem*/
         }
 		
 		input[type="date"] {
@@ -154,7 +154,7 @@
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #ddd;
-            font-size: 0.9rem;
+            font-size: 14px; /*0.9rem*/
             color: #777;
         }	
 
@@ -166,7 +166,7 @@
             margin-bottom: 5px;
             border: 1px solid #ccc;
             border-radius: 5px; manter 5px
-            font-size: 1em;
+            font-size: 16px; /*1em*/
             transition: border-color 0.3s ease;
         }*/
 		
@@ -188,7 +188,7 @@
             color: #000000;
             border: none;
             padding: 5px 10px; /*10px 20px*/
-            font-size: 1em;
+            font-size: 16px; /*1em*/
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s ease;
@@ -210,6 +210,7 @@
 		.nota-promissoria h1 {
 			color: #000;  
             text-align: center;
+			font-size: 32px;
             text-decoration: underline;
         }
 		
@@ -266,8 +267,8 @@
         }
 		
 	#notaContainer {
-		width: 794px; /* Largura exata do A4 (em pixels) */
-		min-height: 1123px; /* Altura exata do A4 */
+		width: 210mm; /* 794px Largura exata do A4 (em pixels) */
+		min-height: 297mm; /* 1123px Altura exata do A4 */
 		padding: 0; /* Garante que não há margens internas */
 		display: flex;
 		flex-direction: column;
@@ -296,8 +297,8 @@
 			
 			border: 1px solid #000;
 			margin: 20px auto;  /*- Centraliza horizontalmente */
-			width: 90%; /* Define uma largura padrão */
-			max-width: 800px; /* Define uma largura máxima */
+			width: 189mm; /* 90% Define uma largura padrão */
+			max-width: 189mm; /* 800px Define uma largura máxima */
 			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Opcional: para destaque */
 			border-radius: 8px; /* Opcional: bordas arredondadas */
 			padding: 20px; /* Espaçamento interno */
@@ -334,7 +335,7 @@
             border-radius: 5px;
 			border: 2px solid #eeff00;			
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 16px; /*1rem*/
             font-weight: bold;
             transition: background-color 0.3s;		
 		}
@@ -823,9 +824,9 @@ function gerarNotas() {
     const notaContainer = document.getElementById("notaContainer");
     notaContainer.innerHTML = ''; 
     notaContainer.style.display = "block";
-	notaContainer.style.width = "210mm"; // Força a largura correta
+	notaContainer.style.width = "800px"; // Força a largura correta
 	notaContainer.style.minHeight = "auto"; // Permite ajustes dinâmicos
-	notaContainer.style.padding = "10mm"; // Pequeno espaçamento para evitar cortes
+	notaContainer.style.padding = "10px"; // Pequeno espaçamento para evitar cortes
 
     for (let i = 1; i <= quantidade; i++) {
         const dataVencimentoAtual = adicionarMes(dataVencimentoInicial, (i - 1) * intervalo);
