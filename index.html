@@ -255,6 +255,10 @@
             text-align: center;
         }
 
+	.paragrafo {
+		font-size: 5px;
+		}
+
         /* Estilo para as linhas de texto */
         p {  /*ok*/
             font-size: 14px;
@@ -865,9 +869,9 @@ function gerarNotas() {
 
             <h3>R$ <strong>${valor}</strong></h3>
 
-            <p>No dia <strong>${dataVencimentoCompleto}</strong>, pagarei por esta única via de nota promissória a <strong>${beneficiario}</strong>, inscrito(a) no CPF/CNPJ nº <strong>${cpfCnpjBeneficiario}</strong> ou à 
+            <span><p>No dia <strong>${dataVencimentoCompleto}</strong>, pagarei por esta única via de nota promissória a <strong>${beneficiario}</strong>, inscrito(a) no CPF/CNPJ nº <strong>${cpfCnpjBeneficiario}</strong> ou à 
             sua ordem a quantia de <strong>${valorExtenso}</strong> em moeda corrente deste país. Págavel em <strong>${localPagamento}</strong>. 
-			<BR><strong>${textoJuros}</strong></p>
+			<BR><strong>${textoJuros}</strong></p></span>
 	    <br>
             <p>${localPagamento}, ${dataEmissaoExtenso}.</p>
 
